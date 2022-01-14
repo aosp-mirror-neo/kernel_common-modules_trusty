@@ -51,6 +51,21 @@ ddk_module(
 )
 
 ddk_module(
+    name = "trusty-ffa",
+    srcs = [
+        "drivers/trusty/trusty-ffa-transport.c",
+    ],
+    out = "trusty-ffa.ko",
+    defconfig = "trusty_defconfig.fragment",
+    kconfig = "Kconfig",
+    kernel_build = ":trusty_aarch64",
+    deps = [
+        "//common:all_headers_aarch64",
+        "//common-modules/trusty:headers",
+    ],
+)
+
+ddk_module(
     name = "trusty-smc",
     srcs = [
         "drivers/trusty/trusty-smc-arm64.S",
@@ -61,6 +76,8 @@ ddk_module(
     kconfig = "Kconfig",
     kernel_build = ":trusty_aarch64",
     deps = [
+        ":trusty-core",
+        ":trusty-ffa",
         "//common:all_headers_aarch64",
         "//common-modules/trusty:headers",
     ],
@@ -131,6 +148,7 @@ kernel_module_group(
     name = "trusty_aarch64_external_modules",
     srcs = [
         ":trusty-core",
+        ":trusty-ffa",
         ":trusty-ipc",
         ":trusty-log",
         ":trusty-smc",
