@@ -60,6 +60,7 @@ ddk_module(
     kconfig = "Kconfig",
     kernel_build = ":trusty_aarch64",
     deps = [
+        ":trusty-core",
         "//common:all_headers_aarch64",
         "//common-modules/trusty:headers",
     ],
