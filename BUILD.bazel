@@ -1,0 +1,121 @@
+# SPDX-License-Identifier: GPL-2.0
+
+load("//build/bazel_common_rules/dist:dist.bzl", "copy_to_dist_dir")
+load(
+    "//build/kernel/kleaf:kernel.bzl",
+    "ddk_headers",
+    "ddk_module",
+    "kernel_module_group",
+)
+
+ddk_headers(
+    name = "headers",
+    hdrs = glob([
+        "drivers/trusty/*.h",
+        "include/**/*.h",
+    ]),
+    includes = [
+        "drivers/trusty",
+        "include",
+    ],
+)
+
+ddk_module(
+    name = "trusty-core",
+    srcs = [
+        "drivers/trusty/trusty.c",
+        "drivers/trusty/trusty-irq.c",
+        "drivers/trusty/trusty-mem.c",
+        "drivers/trusty/trusty-sched-share.c",
+        "drivers/trusty/trusty-smc-arm64.S",
+    ],
+    out = "trusty-core.ko",
+    defconfig = "trusty_defconfig.fragment",
+    kconfig = "drivers/trusty/Kconfig",
+    kernel_build = "//common:kernel_aarch64",
+    deps = [
+        ":headers",
+        "//common:all_headers_aarch64",
+    ],
+)
+
+ddk_module(
+    name = "trusty-ipc",
+    srcs = [
+        "drivers/trusty/trusty-ipc.c",
+    ],
+    out = "trusty-ipc.ko",
+    defconfig = "trusty_defconfig.fragment",
+    kconfig = "drivers/trusty/Kconfig",
+    kernel_build = "//common:kernel_aarch64",
+    deps = [
+        ":headers",
+        ":trusty-core",
+        "//common:all_headers_aarch64",
+    ],
+)
+
+ddk_module(
+    name = "trusty-log",
+    srcs = [
+        "drivers/trusty/trusty-log.c",
+    ],
+    out = "trusty-log.ko",
+    defconfig = "trusty_defconfig.fragment",
+    kconfig = "drivers/trusty/Kconfig",
+    kernel_build = "//common:kernel_aarch64",
+    deps = [
+        ":headers",
+        ":trusty-core",
+        "//common:all_headers_aarch64",
+    ],
+)
+
+ddk_module(
+    name = "trusty-test",
+    srcs = [
+        "drivers/trusty/trusty-test.c",
+    ],
+    out = "trusty-test.ko",
+    defconfig = "trusty_defconfig.fragment",
+    kconfig = "drivers/trusty/Kconfig",
+    kernel_build = "//common:kernel_aarch64",
+    deps = [
+        ":headers",
+        ":trusty-core",
+        "//common:all_headers_aarch64",
+    ],
+)
+
+ddk_module(
+    name = "trusty-virtio",
+    srcs = [
+        "drivers/trusty/trusty-virtio.c",
+    ],
+    out = "trusty-virtio.ko",
+    defconfig = "trusty_defconfig.fragment",
+    kconfig = "drivers/trusty/Kconfig",
+    kernel_build = "//common:kernel_aarch64",
+    deps = [
+        ":headers",
+        ":trusty-core",
+        "//common:all_headers_aarch64",
+    ],
+)
+
+kernel_module_group(
+    name = "trusty",
+    srcs = [
+        ":trusty-core",
+        ":trusty-ipc",
+        ":trusty-log",
+        ":trusty-test",
+        ":trusty-virtio",
+    ],
+)
+
+copy_to_dist_dir(
+    name = "trusty_dist",
+    data = [":trusty"],
+    flat = True,
+)
