@@ -16,12 +16,14 @@ kernel_build(
     base_kernel = "//common:kernel_aarch64",
     build_config = "build.config.trusty.aarch64",
     defconfig_fragments = [
+        "arm_ffa.fragment",
         "system_heap.fragment",
     ],
     make_goals = [
         "modules",
     ],
     module_outs = [
+        "ffa-module.ko",
         "system_heap.ko",
     ],
     strip_modules = True,
