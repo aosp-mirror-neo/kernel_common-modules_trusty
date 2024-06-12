@@ -10,7 +10,7 @@ load(
 )
 
 kernel_build(
-    name = "trusty_kernel_aarch64",
+    name = "trusty_aarch64",
     srcs = ["//common:kernel_aarch64_sources"],
     outs = [],
     base_kernel = "//common:kernel_aarch64",
@@ -51,7 +51,7 @@ ddk_module(
     out = "trusty-core.ko",
     defconfig = "trusty_defconfig.fragment",
     kconfig = "drivers/trusty/Kconfig",
-    kernel_build = ":trusty_kernel_aarch64",
+    kernel_build = ":trusty_aarch64",
     deps = [
         ":headers",
         "//common:all_headers_aarch64",
@@ -66,7 +66,7 @@ ddk_module(
     out = "trusty-ipc.ko",
     defconfig = "trusty_defconfig.fragment",
     kconfig = "drivers/trusty/Kconfig",
-    kernel_build = ":trusty_kernel_aarch64",
+    kernel_build = ":trusty_aarch64",
     deps = [
         ":headers",
         ":trusty-core",
@@ -82,7 +82,7 @@ ddk_module(
     out = "trusty-log.ko",
     defconfig = "trusty_defconfig.fragment",
     kconfig = "drivers/trusty/Kconfig",
-    kernel_build = ":trusty_kernel_aarch64",
+    kernel_build = ":trusty_aarch64",
     deps = [
         ":headers",
         ":trusty-core",
@@ -98,7 +98,7 @@ ddk_module(
     out = "trusty-test.ko",
     defconfig = "trusty_defconfig.fragment",
     kconfig = "drivers/trusty/Kconfig",
-    kernel_build = ":trusty_kernel_aarch64",
+    kernel_build = ":trusty_aarch64",
     deps = [
         ":headers",
         ":trusty-core",
@@ -114,7 +114,7 @@ ddk_module(
     out = "trusty-virtio.ko",
     defconfig = "trusty_defconfig.fragment",
     kconfig = "drivers/trusty/Kconfig",
-    kernel_build = ":trusty_kernel_aarch64",
+    kernel_build = ":trusty_aarch64",
     deps = [
         ":headers",
         ":trusty-core",
@@ -123,7 +123,7 @@ ddk_module(
 )
 
 kernel_module_group(
-    name = "trusty",
+    name = "trusty_aarch64_external_modules",
     srcs = [
         ":trusty-core",
         ":trusty-ipc",
@@ -134,10 +134,10 @@ kernel_module_group(
 )
 
 copy_to_dist_dir(
-    name = "trusty_dist",
+    name = "trusty_aarch64_dist",
     data = [
-        ":trusty",
-        ":trusty_kernel_aarch64",
+        ":trusty_aarch64",
+        ":trusty_aarch64_external_modules",
     ],
     flat = True,
 )
