@@ -104,7 +104,7 @@ ddk_module(
 )
 
 kernel_module_group(
-    name = "trusty",
+    name = "trusty_aarch64_external_modules",
     srcs = [
         ":trusty-core",
         ":trusty-ipc",
@@ -115,7 +115,9 @@ kernel_module_group(
 )
 
 copy_to_dist_dir(
-    name = "trusty_dist",
-    data = [":trusty"],
+    name = "trusty_aarch64_dist",
+    data = [
+        ":trusty_aarch64_external_modules",
+    ],
     flat = True,
 )
