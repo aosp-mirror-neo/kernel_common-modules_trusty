@@ -6,6 +6,7 @@ load(
     "ddk_headers",
     "ddk_module",
     "kernel_build",
+    "kernel_compile_commands",
     "kernel_module_group",
 )
 
@@ -130,6 +131,14 @@ kernel_module_group(
         ":trusty-log",
         ":trusty-test",
         ":trusty-virtio",
+    ],
+)
+
+kernel_compile_commands(
+    name = "trusty_aarch64_compile_commands",
+    deps = [
+        ":trusty_aarch64",
+        ":trusty_aarch64_external_modules",
     ],
 )
 
