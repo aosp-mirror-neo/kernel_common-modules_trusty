@@ -23,6 +23,7 @@ kernel_build(
         "modules",
     ],
     module_outs = [
+        "ffa-core.ko",
         "ffa-module.ko",
     ],
     strip_modules = True,
