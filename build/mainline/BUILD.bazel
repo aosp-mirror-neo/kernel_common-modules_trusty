@@ -3,7 +3,6 @@
 load("//build/bazel_common_rules/dist:dist.bzl", "copy_to_dist_dir")
 load(
     "//build/kernel/kleaf:kernel.bzl",
-    "ddk_headers",
     "ddk_module",
     "kernel_build",
     "kernel_compile_commands",
@@ -29,21 +28,6 @@ kernel_build(
     strip_modules = True,
 )
 
-ddk_headers(
-    name = "headers",
-    hdrs = glob([
-        "drivers/trusty/*.h",
-        "include/**/*.h",
-    ]),
-    includes = [
-        "drivers/trusty",
-        "include",
-    ],
-    visibility = [
-        ":__subpackages__",
-    ],
-)
-
 ddk_module(
     name = "trusty-core",
     srcs = [
@@ -55,11 +39,11 @@ ddk_module(
     ],
     out = "trusty-core.ko",
     defconfig = "trusty_defconfig.fragment",
-    kconfig = "drivers/trusty/Kconfig",
+    kconfig = "Kconfig",
     kernel_build = ":trusty_aarch64",
     deps = [
-        ":headers",
         "//common:all_headers_aarch64",
+        "//common-modules/trusty:headers",
     ],
 )
 
@@ -70,12 +54,12 @@ ddk_module(
     ],
     out = "trusty-ipc.ko",
     defconfig = "trusty_defconfig.fragment",
-    kconfig = "drivers/trusty/Kconfig",
+    kconfig = "Kconfig",
     kernel_build = ":trusty_aarch64",
     deps = [
-        ":headers",
         ":trusty-core",
         "//common:all_headers_aarch64",
+        "//common-modules/trusty:headers",
     ],
 )
 
@@ -86,12 +70,12 @@ ddk_module(
     ],
     out = "trusty-log.ko",
     defconfig = "trusty_defconfig.fragment",
-    kconfig = "drivers/trusty/Kconfig",
+    kconfig = "Kconfig",
     kernel_build = ":trusty_aarch64",
     deps = [
-        ":headers",
         ":trusty-core",
         "//common:all_headers_aarch64",
+        "//common-modules/trusty:headers",
     ],
 )
 
@@ -102,12 +86,12 @@ ddk_module(
     ],
     out = "trusty-test.ko",
     defconfig = "trusty_defconfig.fragment",
-    kconfig = "drivers/trusty/Kconfig",
+    kconfig = "Kconfig",
     kernel_build = ":trusty_aarch64",
     deps = [
-        ":headers",
         ":trusty-core",
         "//common:all_headers_aarch64",
+        "//common-modules/trusty:headers",
     ],
 )
 
@@ -118,12 +102,12 @@ ddk_module(
     ],
     out = "trusty-virtio.ko",
     defconfig = "trusty_defconfig.fragment",
-    kconfig = "drivers/trusty/Kconfig",
+    kconfig = "Kconfig",
     kernel_build = ":trusty_aarch64",
     deps = [
-        ":headers",
         ":trusty-core",
         "//common:all_headers_aarch64",
+        "//common-modules/trusty:headers",
     ],
 )
 
