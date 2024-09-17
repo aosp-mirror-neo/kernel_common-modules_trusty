@@ -18,6 +18,7 @@ kernel_build(
     build_config = "build.config.trusty.aarch64",
     defconfig_fragments = [
         "arm_ffa.fragment",
+        "system_heap.fragment",
     ],
     make_goals = [
         "modules",
@@ -26,6 +27,7 @@ kernel_build(
     module_outs = [
         "ffa-core.ko",
         "ffa-module.ko",
+        "system_heap.ko",
     ],
     strip_modules = True,
 )
