@@ -21,6 +21,7 @@ kernel_build(
     make_goals = [
         "modules",
     ],
+    makefile = "//common:Makefile",
     module_outs = [
         "ffa-core.ko",
         "ffa-module.ko",

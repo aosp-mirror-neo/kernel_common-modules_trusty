@@ -1,1 +1,1 @@
-../../build.config.trusty.aarch64
+. ${ROOT_DIR}/${KERNEL_DIR}/build.config.gki.aarch64
