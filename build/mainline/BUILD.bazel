@@ -1,6 +1,7 @@
 # SPDX-License-Identifier: GPL-2.0
 
-load("//build/bazel_common_rules/dist:dist.bzl", "copy_to_dist_dir")
+load("@rules_pkg//pkg:install.bzl", "pkg_install")
+load("@rules_pkg//pkg:mappings.bzl", "pkg_files", "strip_prefix")
 load(
     "//build/kernel/kleaf:kernel.bzl",
     "ddk_module",
@@ -126,11 +127,17 @@ kernel_compile_commands(
     ],
 )
 
-copy_to_dist_dir(
-    name = "trusty_aarch64_dist",
-    data = [
+pkg_files(
+    name = "trusty_aarch64_dist_files",
+    srcs = [
         ":trusty_aarch64",
         ":trusty_aarch64_external_modules",
     ],
-    flat = True,
+    strip_prefix = strip_prefix.files_only(),
+    visibility = ["//visibility:private"],
+)
+
+pkg_install(
+    name = "trusty_aarch64_dist",
+    srcs = [":trusty_aarch64_dist_files"],
 )
