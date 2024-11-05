@@ -15,11 +15,8 @@ kernel_build(
     srcs = ["//common:kernel_aarch64_sources"],
     outs = [],
     base_kernel = "//common:kernel_aarch64",
-    build_config = "build.config.trusty.aarch64",
-    defconfig_fragments = [
-        "arm_ffa.fragment",
-        "system_heap.fragment",
-    ],
+    build_config = "//common:build.config.common",
+    defconfig = "//common:arch/arm64/configs/gki_defconfig",
     make_goals = [
         "modules",
     ],
@@ -28,6 +25,10 @@ kernel_build(
         "ffa-core.ko",
         "ffa-module.ko",
         "system_heap.ko",
+    ],
+    post_defconfig_fragments = [
+        "arm_ffa.fragment",
+        "system_heap.fragment",
     ],
     strip_modules = True,
 )
