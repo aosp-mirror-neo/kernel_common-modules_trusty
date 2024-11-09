@@ -82,7 +82,8 @@ ddk_module(
 ddk_module(
     name = "trusty-test",
     srcs = [
-        "drivers/trusty/trusty-test.c",
+        "drivers/trusty/trusty-test-arm64.S",
+        "drivers/trusty/trusty-test-main.c",
     ],
     out = "trusty-test.ko",
     defconfig = "trusty_defconfig.fragment",
