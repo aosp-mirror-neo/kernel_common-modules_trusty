@@ -40,13 +40,28 @@ ddk_module(
         "drivers/trusty/trusty-irq.c",
         "drivers/trusty/trusty-mem.c",
         "drivers/trusty/trusty-sched-share.c",
-        "drivers/trusty/trusty-smc-arm64.S",
     ],
     out = "trusty-core.ko",
     defconfig = "trusty_defconfig.fragment",
     kconfig = "Kconfig",
     kernel_build = ":trusty_aarch64",
     deps = [
+        "//common-modules/trusty:headers",
+    ],
+)
+
+ddk_module(
+    name = "trusty-smc",
+    srcs = [
+        "drivers/trusty/trusty-smc-arm64.S",
+        "drivers/trusty/trusty-smc-transport.c",
+    ],
+    out = "trusty-smc.ko",
+    defconfig = "trusty_defconfig.fragment",
+    kconfig = "Kconfig",
+    kernel_build = ":trusty_aarch64",
+    deps = [
+        "//common:all_headers_aarch64",
         "//common-modules/trusty:headers",
     ],
 )
@@ -118,6 +133,7 @@ kernel_module_group(
         ":trusty-core",
         ":trusty-ipc",
         ":trusty-log",
+        ":trusty-smc",
         ":trusty-test",
         ":trusty-virtio",
     ],
