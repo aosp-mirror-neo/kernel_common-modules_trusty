@@ -145,6 +145,20 @@ ddk_module(
     ],
 )
 
+ddk_module(
+    name = "trusty-populate",
+    srcs = [
+        "drivers/trusty/trusty-populate.c",
+    ],
+    out = "trusty-populate.ko",
+    defconfig = "trusty_defconfig.fragment",
+    kconfig = "Kconfig",
+    kernel_build = ":trusty_aarch64",
+    deps = [
+        "//common:all_headers_aarch64",
+    ],
+)
+
 kernel_module_group(
     name = "trusty_aarch64_external_modules",
     srcs = [
@@ -152,6 +166,7 @@ kernel_module_group(
         ":trusty-ffa",
         ":trusty-ipc",
         ":trusty-log",
+        ":trusty-populate",
         ":trusty-smc",
         ":trusty-test",
         ":trusty-virtio",
