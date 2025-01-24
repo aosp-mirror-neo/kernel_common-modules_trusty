@@ -15,7 +15,6 @@ kernel_build(
     srcs = ["//common:kernel_aarch64_sources"],
     outs = [],
     base_kernel = "//common:kernel_aarch64",
-    build_config = "//common:build.config.common",
     defconfig = "//common:arch/arm64/configs/gki_defconfig",
     make_goals = [
         "modules",
