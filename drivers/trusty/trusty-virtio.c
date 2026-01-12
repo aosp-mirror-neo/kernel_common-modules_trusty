@@ -826,19 +826,33 @@ err_share_memory:
 	return ret;
 }
 
+#if (KERNEL_VERSION(6, 19, 0) > LINUX_VERSION_CODE)
 static dma_addr_t trusty_virtio_dma_map_page(struct device *dev,
 					     struct page *page,
-					     unsigned long offset, size_t size,
+					     unsigned long offset,
+#else
+static dma_addr_t trusty_virtio_dma_map_phys(struct device *dev,
+					     phys_addr_t phys,
+#endif
+					     size_t size,
 					     enum dma_data_direction dir,
 					     unsigned long attrs)
 {
+#if (KERNEL_VERSION(6, 19, 0) > LINUX_VERSION_CODE)
 	struct tipc_msg_buf *buf = page_to_virt(page) + offset;
+#else
+	struct tipc_msg_buf *buf = phys_to_virt(phys);
+#endif
 
 	return buf->buf_id;
 }
 
 /* The kernel requires this to exist, but doesn't require it do anything */
+#if (KERNEL_VERSION(6, 19, 0) > LINUX_VERSION_CODE)
 static void trusty_virtio_dma_unmap_page(struct device *dev,
+#else
+static void trusty_virtio_dma_unmap_phys(struct device *dev,
+#endif
 					 dma_addr_t dma_handle,
 					 size_t size,
 					 enum dma_data_direction dir,
@@ -871,8 +885,13 @@ static void trusty_virtio_dma_unmap_sg(struct device *dev,
 }
 
 static const struct dma_map_ops trusty_virtio_dma_map_ops = {
+#if (KERNEL_VERSION(6, 19, 0) > LINUX_VERSION_CODE)
 	.map_page = trusty_virtio_dma_map_page,
 	.unmap_page = trusty_virtio_dma_unmap_page,
+#else
+	.map_phys = trusty_virtio_dma_map_phys,
+	.unmap_phys = trusty_virtio_dma_unmap_phys,
+#endif
 	.map_sg = trusty_virtio_dma_map_sg,
 	.unmap_sg = trusty_virtio_dma_unmap_sg,
 };
