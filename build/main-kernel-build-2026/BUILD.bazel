@@ -5,6 +5,7 @@ load("@rules_pkg//pkg:mappings.bzl", "pkg_files", "strip_prefix")
 load(
     "//build/kernel/kleaf:kernel.bzl",
     "ddk_module",
+    "kernel_abi",
     "kernel_build",
     "kernel_compile_commands",
     "kernel_module_group",
@@ -16,6 +17,7 @@ kernel_build(
     outs = [],
     base_kernel = "//common:kernel_aarch64",
     defconfig = "//common:arch/arm64/configs/gki_defconfig",
+    kmi_symbol_list = "//common:gki/aarch64/symbols/trusty",
     make_goals = [
         "modules",
     ],
@@ -186,6 +188,13 @@ kernel_module_group(
         ":trusty-virtio",
         ":trusty-virtio-polling",
     ],
+)
+
+kernel_abi(
+    name = "trusty_aarch64_abi",
+    kernel_build = ":trusty_aarch64",
+    kernel_modules = [":trusty_aarch64_external_modules"],
+    kmi_symbol_list_add_only = True,
 )
 
 kernel_compile_commands(
