@@ -1,0 +1,63 @@
+# Copyright (C) 2025 The Android Open Source Project
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+load("@kleaf//build/kernel/kleaf:kernel.bzl", "ddk_headers", "ddk_library")
+
+ddk_headers(
+    name = "hyp-headers",
+    hdrs = glob([
+        "*.h",
+    ]),
+    includes = [
+        ".",
+    ],
+    visibility = [
+        "//common-modules/trusty:__subpackages__",
+    ],
+)
+
+# NOTE: keep in sync with :hyp target modulo name and kernel_build
+# TODO: get rid of duplicate ddk_library targets like this one
+ddk_library(
+    name = "hyp-2025",
+    srcs = ["el2.c"],
+    kernel_build = "//common-modules/trusty/build/main-kernel-build-2025:trusty_aarch64",
+    # Indicate that this builds EL2 hypervisor code.
+    pkvm_el2 = True,
+    visibility = [
+        "//common-modules/trusty:__subpackages__",
+    ],
+    deps = [
+        ":hyp-headers",
+        "//common-modules/trusty/build/main-kernel-build-2025:pkvm-dma-buf-heap-headers",
+    ],
+)
+
+# NOTE: keep in sync with :hyp target modulo name and kernel_build
+# TODO: get rid of duplicate ddk_library targets like this one
+ddk_library(
+    name = "hyp-2026",
+    srcs = ["el2.c"],
+    kernel_build = "//common-modules/trusty/build/main-kernel-build-2026:trusty_aarch64",
+    # Indicate that this builds EL2 hypervisor code.
+    pkvm_el2 = True,
+    visibility = [
+        "//common-modules/trusty:__subpackages__",
+    ],
+    deps = [
+        ":hyp-headers",
+        "//common-modules/trusty/build/main-kernel-build-2026:pkvm-dma-buf-heap-headers",
+    ],
+)
+
+# NOTE: entry for mainline kernel omitted as it doesn't support pKVM modules

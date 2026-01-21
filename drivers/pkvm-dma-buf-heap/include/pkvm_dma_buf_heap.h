@@ -1,0 +1,6 @@
+#ifndef _PKVM_DMA_BUF_HEAP_H
+#define _PKVM_DMA_BUF_HEAP_H
+
+#define SMC_ACCEPT_SECURE_BUF	0x123
+
+#endif /* _PKVM_DMA_BUF_HEAP_H */

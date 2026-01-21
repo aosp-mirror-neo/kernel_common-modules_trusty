@@ -4,6 +4,7 @@ load("@rules_pkg//pkg:install.bzl", "pkg_install")
 load("@rules_pkg//pkg:mappings.bzl", "pkg_files", "strip_prefix")
 load(
     "//build/kernel/kleaf:kernel.bzl",
+    "ddk_headers",
     "ddk_module",
     "kernel_abi",
     "kernel_build",
@@ -32,6 +33,9 @@ kernel_build(
         "system_heap.fragment",
     ],
     strip_modules = True,
+    visibility = [
+        "//common-modules/trusty:__subpackages__",
+    ],
 )
 
 ddk_module(
@@ -175,9 +179,41 @@ ddk_module(
     ],
 )
 
+ddk_headers(
+    name = "pkvm-dma-buf-heap-headers",
+    hdrs = glob([
+        "drivers/pkvm-dma-buf-heap/include/*.h",
+    ]),
+    includes = [
+        "drivers/pkvm-dma-buf-heap/include",
+    ],
+    visibility = [
+        "//common-modules/trusty/build/main-kernel-build-2025/drivers/pkvm-dma-buf-heap/hyp:__pkg__",
+    ],
+)
+
+# NOTE: it would be cleaner to put the ddk_library rule here but that leads
+# to linking errors for the code running in EL2. The ddk_library rule is
+# deliberately put in the build file for the hyp directory as a workaround.
+ddk_module(
+    name = "pkvm-dma-buf-heap",
+    srcs = [
+        "drivers/pkvm-dma-buf-heap/el1.c",
+        "drivers/pkvm-dma-buf-heap/system_heap_modified.c",
+    ],
+    out = "pkvm-dma-buf-heap.ko",
+    kernel_build = ":trusty_aarch64",
+    deps = [
+        ":pkvm-dma-buf-heap-headers",
+        "//common-modules/trusty/build/main-kernel-build-2025/drivers/pkvm-dma-buf-heap/hyp:hyp-2025",
+        "//common-modules/trusty/build/main-kernel-build-2025/drivers/pkvm-dma-buf-heap/hyp:hyp-headers",
+    ],
+)
+
 kernel_module_group(
     name = "trusty_aarch64_external_modules",
     srcs = [
+        ":pkvm-dma-buf-heap",
         ":trusty-core",
         ":trusty-ffa",
         ":trusty-ipc",
