@@ -1,7 +1,28 @@
 #ifndef __PKVM_DMA_BUF_HEAP_EL2_H
 #define __PKVM_DMA_BUF_HEAP_EL2_H
 
+#include <linux/types.h>
+
+#define MAX_CONFIGURED_VMS 8
+#define AUTH_TOKEN_SIZE 64
+
+struct pkvm_heap_config_entry {
+	/* Physical address of the 64-byte secret */
+	phys_addr_t token_paddr;
+	/* An ID that can be used to validate a page's configuration in IOMMU page tables */
+	u32 protection_id;
+};
+
+struct pkvm_heap_config {
+	u16 num_entries;
+	struct pkvm_heap_config_entry entries[MAX_CONFIGURED_VMS];
+};
+
+
 #ifdef __KVM_NVHE_HYPERVISOR__
+
+extern struct pkvm_heap_config global_pkvm_heap_config;
+
 int hyp_init(const struct pkvm_module_ops *__ops);
 /**
  * protect_page() - Protect memory pages from the host.
@@ -35,10 +56,10 @@ void __kvm_nvhe_protect_page(struct user_pt_regs *regs);
  */
 void __kvm_nvhe_unprotect_page(struct user_pt_regs *regs);
 
-extern unsigned long protect_page_hvc;
-extern unsigned long unprotect_page_hvc;
+extern int protect_page_hvc;
+extern int unprotect_page_hvc;
 extern const struct dma_heap_ops system_heap_modified_ops;
-
+extern struct pkvm_heap_config __kvm_nvhe_global_pkvm_heap_config;
 #define PKVM_DMA_BUF_HEAP_IOC_MAGIC		'P'
 #define PKVM_DMA_BUF_HEAP_IOCTL_ENABLE_SMC	_IOWR(PKVM_DMA_BUF_HEAP_IOC_MAGIC, 0x0, __u32)
 #endif /*  __KVM_NVHE_HYPERVISOR__ */
