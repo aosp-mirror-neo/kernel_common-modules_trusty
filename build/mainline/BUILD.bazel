@@ -30,6 +30,9 @@ kernel_build(
         "system_heap.fragment",
     ],
     strip_modules = True,
+    visibility = [
+        "//common-modules/trusty:__subpackages__",
+    ],
 )
 
 ddk_module(
@@ -173,6 +176,12 @@ ddk_module(
     ],
 )
 
+# NOTE: we are not building the pkvm-dma-buf-heap module for mainline kernels
+# because they do not support building pKVM modules with DDK. The test is
+# whether $(srctree)/arch/arm64/kvm/hyp/nvhe/Makefile.module exists or not.
+#
+# Source: comment in _define_common_kernels_additional_tests in
+# build/kernel/kleaf/common_kernels.bzl.
 kernel_module_group(
     name = "trusty_aarch64_external_modules",
     srcs = [
