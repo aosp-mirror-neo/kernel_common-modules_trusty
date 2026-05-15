@@ -285,6 +285,10 @@ static int vds_get_list_to_unmap(struct tipc_virtio_dev *vds,
 {
 	int actual_cnt = 0;
 	struct list_head *tmp_list;
+	LIST_HEAD(tmp_cut);
+
+	if (list_empty(list))
+		return 0;
 
 	/* find last entry that needs to move */
 	list_for_each(tmp_list, list) {
@@ -293,8 +297,19 @@ static int vds_get_list_to_unmap(struct tipc_virtio_dev *vds,
 			break;
 	}
 
-	/* move it all at once */
-	list_cut_position(list_to_unmap, list, tmp_list);
+	/*
+	 * If the loop completed normally without breaking (e.g.
+	 * request_cnt <= 0, or request_cnt >= total entries), tmp_list will
+	 * point to 'list' (the head). In this case, we want to cut up to the
+	 * last entry of the list.
+	 */
+	if (tmp_list == list) {
+		tmp_list = list->prev;
+	}
+
+	/* cut the selected range into tmp_cut, then append to list_to_unmap */
+	list_cut_position(&tmp_cut, list, tmp_list);
+	list_splice_tail(&tmp_cut, list_to_unmap);
 
 	return actual_cnt;
 }
