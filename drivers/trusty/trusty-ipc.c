@@ -1970,6 +1970,7 @@ static int tipc_release(struct inode *inode, struct file *filp)
 
 	/* put all pending buffers back on free list for reuse by another channel */
 	mutex_lock(&dn->chan->vds->free_rx_lock);
+	dn->chan->vds->free_rx_cnt += list_count_nodes(&dn->rx_msg_queue);
 	list_splice_init(&dn->rx_msg_queue, &dn->chan->vds->free_rx_queue);
 	mutex_unlock(&dn->chan->vds->free_rx_lock);
 
