@@ -25,6 +25,7 @@ kernel_build(
         "ffa-module.ko",
         "system_heap.ko",
     ],
+    pahole = "//common:pahole",
     strip_modules = True,
 )
 

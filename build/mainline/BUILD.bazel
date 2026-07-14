@@ -25,6 +25,7 @@ kernel_build(
         "ffa-module.ko",
         "system_heap.ko",
     ],
+    pahole = "//common:pahole",
     post_defconfig_fragments = [
         "arm_ffa.fragment",
         "system_heap.fragment",
