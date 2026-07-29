@@ -55,7 +55,18 @@
 
 #define TRUSTY_STDCALLTEST_API_VERSION 1
 
+#if (KERNEL_VERSION(7, 1, 0) > LINUX_VERSION_CODE)
 void trusty_fpsimd_save_state(struct user_fpsimd_state *fp_regs);
 void trusty_fpsimd_load_state(struct user_fpsimd_state *fp_regs);
+#else
+#include <asm/fpsimd.h>
+
+static inline void trusty_fpsimd_save_state(struct user_fpsimd_state *fp_regs) {
+	fpsimd_save_state(fp_regs);
+}
+static inline void trusty_fpsimd_load_state(struct user_fpsimd_state *fp_regs) {
+	fpsimd_load_state(fp_regs);
+}
+#endif
 
 #endif /* _TRUSTY_TEST_H */
